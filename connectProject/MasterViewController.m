@@ -33,14 +33,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    LocationManagerSingleton *manager = [LocationManagerSingleton sharedSingleton];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(permissionUpdatedNotification:)
+                                                 name:@"permissionUpdated"
+                                               object:nil];
     //seed drand48() for random coordinates
+    
     srand48(time(0));
-    
+    LocationManagerSingleton* manager = [LocationManagerSingleton sharedSingleton];
     [self getVenues:manager.locationManager.location];
-    //Pull data from FourSquare
-    
     
     // Do any additional setup after loading the view, typically from a nib.
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
@@ -67,14 +68,19 @@
     
     //store contents of URL; request only venues within 500m
     NSData *venuesData;
-    if(userLoc){
+    
+    
+    if(userLoc==nil){
+        
     venuesData = [[NSData alloc] initWithContentsOfURL:
                           [NSURL URLWithString:[[NSString alloc] initWithFormat: @"https://api.foursquare.com/v2/venues/explore?ll=%f,%f&radius=%@&oauth_token=QELSMJL12HVK4WGDLTV1XZ4TSK25FJNIRQCZ3U4I0NEQFBIX&v=20150723",userLoc.coordinate.latitude,userLoc.coordinate.longitude,RADIUS]]];
     }
     else{
     venuesData = [[NSData alloc] initWithContentsOfURL:
-                              [NSURL URLWithString:[[NSString alloc] initWithFormat: @"https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&radius=%@&oauth_token=QELSMJL12HVK4WGDLTV1XZ4TSK25FJNIRQCZ3U4I0NEQFBIX&v=20150723",RADIUS]]];
+                              [NSURL URLWithString:[[NSString alloc] initWithFormat: @"https://api.foursquare.com/v2/venues/search?ll=40.7,-74&radius=%@&oauth_token=QELSMJL12HVK4WGDLTV1XZ4TSK25FJNIRQCZ3U4I0NEQFBIX&v=20150725",RADIUS]]];
     }
+    
+    
     NSError *error;
 
     
@@ -87,7 +93,7 @@
     else{
         //Begin parsing JSON
         NSArray *items = [[[[venues objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0] objectForKey:@"items"];
-        
+        //NSLog(@"%li",(long)[items count]);
         for(NSDictionary *venue in items){
             
             Venue *venueObj = [[Venue alloc] initWithName:[[venue objectForKey:@"venue"] objectForKey:@"name"]];
@@ -102,6 +108,16 @@
     }
 }
 
+/*
+ * If LocationManagerSingleton has obtained new user location, receive notification and add new venues.
+ */
+- (void)permissionUpdatedNotification:(NSNotification *)note {
+    LocationManagerSingleton *manager = [LocationManagerSingleton sharedSingleton];
+    //Pull data from FourSquare
+    [self getVenues:manager.locationManager.location];
+    
+    
+}
 /*
  Insert new random coordinate
  */

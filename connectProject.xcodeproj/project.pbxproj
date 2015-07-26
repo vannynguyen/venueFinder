@@ -33,10 +33,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B128B4A71B61DD1E00FEAE29 /* LocationManagerSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocationManagerSingleton.h; path = ../LocationManagerSingleton.h; sourceTree = "<group>"; };
 		B128B4A81B61DD7600FEAE29 /* LocationManagerSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationManagerSingleton.m; sourceTree = "<group>"; };
 		B128B4AA1B61FC6700FEAE29 /* Venue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Venue.m; sourceTree = "<group>"; };
 		B128B4AC1B61FCB100FEAE29 /* Venue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Venue.h; sourceTree = "<group>"; };
+		B19AB0701B62F76300338111 /* LocationManagerSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationManagerSingleton.h; sourceTree = "<group>"; };
 		B1C93A631B53E70D0082B2FB /* connectProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = connectProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1C93A671B53E70D0082B2FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1C93A681B53E70D0082B2FB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		B1C93A651B53E70D0082B2FB /* connectProject */ = {
 			isa = PBXGroup;
 			children = (
-				B128B4A71B61DD1E00FEAE29 /* LocationManagerSingleton.h */,
+				B19AB0701B62F76300338111 /* LocationManagerSingleton.h */,
 				B128B4A81B61DD7600FEAE29 /* LocationManagerSingleton.m */,
 				B128B4AC1B61FCB100FEAE29 /* Venue.h */,
 				B128B4AA1B61FC6700FEAE29 /* Venue.m */,

@@ -9,7 +9,9 @@
 
 #import "LocationManagerSingleton.h"
 
-@implementation LocationManagerSingleton
+@implementation LocationManagerSingleton{
+
+}
 
 @synthesize locationManager;
 
@@ -31,16 +33,18 @@
     if(self) {
         self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
-        
         //request permission for iOS8+ users
         #ifdef __IPHONE_8_0
             if(IS_OS_8_OR_LATER) {
                 [self.locationManager requestWhenInUseAuthorization];
             }
         #endif
+        
+        
         [self.locationManager setDistanceFilter:kCLDistanceFilterNone];
         [self.locationManager setHeadingFilter:kCLHeadingFilterNone];
         [self.locationManager startUpdatingLocation];
+        
         //do any more customization to your location manager
     }
     
@@ -48,8 +52,11 @@
 }
 
 
-
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"permissionUpdated" object:nil];
+        
+    }
     
 }
 
@@ -57,6 +64,13 @@
 
 }
 
+- (void)locationManager:(CLLocationManager *)manager
+didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    
+    
+    
+    
+}
 
 
 @end
