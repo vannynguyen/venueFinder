@@ -45,15 +45,27 @@
         [self.locationManager setHeadingFilter:kCLHeadingFilterNone];
         [self.locationManager startUpdatingLocation];
         
-        //do any more customization to your location manager
     }
     
     return self;
 }
 
-
+    //Notify MasterViewController to generate venues each time locations updated
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    
+
     if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        CLLocation *newLocation = [locations lastObject];
+        
+        //check time since last location was recorded
+        NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
+        
+        if (fabs(locationAge) < .5) {
+            NSLog(@"Hi: %f",locationAge);
+            return;
+        }
+        NSLog(@"HIIIIII");
+
         [[NSNotificationCenter defaultCenter] postNotificationName:@"permissionUpdated" object:nil];
         
     }
@@ -67,7 +79,7 @@
 - (void)locationManager:(CLLocationManager *)manager
 didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"permissionUpdated" object:nil];
     
     
 }

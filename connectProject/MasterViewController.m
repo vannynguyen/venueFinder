@@ -70,7 +70,7 @@
     NSData *venuesData;
     
     
-    if(userLoc==nil){
+    if(userLoc!=nil){
         
     venuesData = [[NSData alloc] initWithContentsOfURL:
                           [NSURL URLWithString:[[NSString alloc] initWithFormat: @"https://api.foursquare.com/v2/venues/explore?ll=%f,%f&radius=%@&oauth_token=QELSMJL12HVK4WGDLTV1XZ4TSK25FJNIRQCZ3U4I0NEQFBIX&v=20150723",userLoc.coordinate.latitude,userLoc.coordinate.longitude,RADIUS]]];
@@ -113,9 +113,22 @@
  */
 - (void)permissionUpdatedNotification:(NSNotification *)note {
     LocationManagerSingleton *manager = [LocationManagerSingleton sharedSingleton];
-    //Pull data from FourSquare
-    [self getVenues:manager.locationManager.location];
+   
+    //reset table view for new locations
+    NSMutableArray* indexPathsToDelete = [[NSMutableArray alloc] init];
+    for(unsigned int i = 0; i < [self.objects count]; i++)
+    {
+        [indexPathsToDelete addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
     
+    [self.tableView beginUpdates];
+    [self.objects removeAllObjects];
+    [self.tableView deleteRowsAtIndexPaths:indexPathsToDelete withRowAnimation:UITableViewRowAnimationLeft];
+    [self.tableView endUpdates];
+    
+     //Pull data from FourSquare
+    [self getVenues:manager.locationManager.location];
+    [self.tableView reloadData];
     
 }
 /*
