@@ -33,21 +33,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //Receive notifications from LocationManagerSingleton whenever location updates
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(permissionUpdatedNotification:)
                                                  name:@"permissionUpdated"
                                                object:nil];
     //seed drand48() for random coordinates
-    
     srand48(time(0));
     LocationManagerSingleton* manager = [LocationManagerSingleton sharedSingleton];
     [self getVenues:manager.locationManager.location];
     
-    // Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
+    
+    
+    
+    // User can add randomly generated coordinates
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
 }
 
 /**
@@ -70,12 +73,14 @@
     NSData *venuesData;
     
     
+    
     if(userLoc!=nil){
-        
+    //if user location successfully retrieved
     venuesData = [[NSData alloc] initWithContentsOfURL:
                           [NSURL URLWithString:[[NSString alloc] initWithFormat: @"https://api.foursquare.com/v2/venues/explore?ll=%f,%f&radius=%@&oauth_token=QELSMJL12HVK4WGDLTV1XZ4TSK25FJNIRQCZ3U4I0NEQFBIX&v=20150723",userLoc.coordinate.latitude,userLoc.coordinate.longitude,RADIUS]]];
     }
     else{
+    //catch nil data; fill venuesData with dummy data from default coordinates
     venuesData = [[NSData alloc] initWithContentsOfURL:
                               [NSURL URLWithString:[[NSString alloc] initWithFormat: @"https://api.foursquare.com/v2/venues/search?ll=40.7,-74&radius=%@&oauth_token=QELSMJL12HVK4WGDLTV1XZ4TSK25FJNIRQCZ3U4I0NEQFBIX&v=20150725",RADIUS]]];
     }
@@ -93,7 +98,6 @@
     else{
         //Begin parsing JSON
         NSArray *items = [[[[venues objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0] objectForKey:@"items"];
-        //NSLog(@"%li",(long)[items count]);
         for(NSDictionary *venue in items){
             
             Venue *venueObj = [[Venue alloc] initWithName:[[venue objectForKey:@"venue"] objectForKey:@"name"]];

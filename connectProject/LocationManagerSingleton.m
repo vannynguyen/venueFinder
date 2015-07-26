@@ -50,7 +50,9 @@
     return self;
 }
 
-    //Notify MasterViewController to generate venues each time locations updated
+/*
+ * Notify MasterViewController to generate venues each time locations updated
+*/
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     
 
@@ -61,10 +63,8 @@
         NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
         
         if (fabs(locationAge) < .5) {
-            NSLog(@"Hi: %f",locationAge);
             return;
         }
-        NSLog(@"HIIIIII");
 
         [[NSNotificationCenter defaultCenter] postNotificationName:@"permissionUpdated" object:nil];
         
@@ -79,6 +79,7 @@
 - (void)locationManager:(CLLocationManager *)manager
 didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     
+    //load table in MasterViewController according to location permissions 
     [[NSNotificationCenter defaultCenter] postNotificationName:@"permissionUpdated" object:nil];
     
     
